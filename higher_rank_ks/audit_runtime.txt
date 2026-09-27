@@ -1,0 +1,37 @@
+HigherRankKSRuntime.algorithmic (O : HigherRankKSRuntime.SDPValue.Solver) :
+  ∃ C e,
+    0 < C ∧
+      ∀ (N d r : ℕ) (ε : ℝ) (hr : 1 ≤ r),
+        0 ≤ ε →
+          ∀ (A : Fin N → Matrix (Fin d) (Fin d) ℂ) (hA : ∀ (i : Fin N), (A i).PosSemidef) (hsum : ∑ i, A i = 1),
+            (∀ (i : Fin N), ‖Matrix.toEuclideanCLM (A i)‖ ≤ ε) →
+              ∀ (hrank : ∀ (i : Fin N), (A i).rank ≤ r),
+                have out := HigherRankKSRuntime.solve O A hr hA hsum hrank;
+                (∀ (i : Fin N), out.value i = 1 ∨ out.value i = -1) ∧
+                  ‖Matrix.toEuclideanCLM (HigherRankKS.signedSum A out.value)‖ ≤
+                      min 1 (10000 * √(ε * Real.log (2 * ↑r))) ∧
+                    ↑out.cost ≤ C * (1 + ↑N + ↑d) ^ e
+'HigherRankKSRuntime.algorithmic' depends on axioms: [propext, Classical.choice, Quot.sound]
+HigherRankKSRuntime.solve_correct {N d r : ℕ} (O : HigherRankKSRuntime.SDPValue.Solver)
+  (A : Fin N → HigherRankKSRuntime.SDPValue.Mat d) (hr : 1 ≤ r) (hA : ∀ (i : Fin N), Matrix.PosSemidef (A i))
+  (hs : ∑ i, A i = 1) (hrank : ∀ (i : Fin N), Matrix.rank (A i) ≤ r) {ε : ℝ} (hε : 0 ≤ ε)
+  (hnorm : ∀ (i : Fin N), ‖Matrix.toEuclideanCLM (A i)‖ ≤ ε) :
+  have out := HigherRankKSRuntime.solve O A hr hA hs hrank;
+  (∀ (i : Fin N), out.value i = 1 ∨ out.value i = -1) ∧
+    ‖Matrix.toEuclideanCLM (HigherRankKS.signedSum A out.value)‖ ≤ min 1 (10000 * √(ε * Real.log (2 * ↑r)))
+'HigherRankKSRuntime.solve_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+HigherRankKSRuntime.solve_polynomial (O : HigherRankKSRuntime.SDPValue.Solver) :
+  ∃ C e,
+    0 < C ∧
+      ∀ (N d r : ℕ) (A : Fin N → HigherRankKSRuntime.SDPValue.Mat d) (hr : 1 ≤ r)
+        (hA : ∀ (i : Fin N), Matrix.PosSemidef (A i)) (hs : ∑ i, A i = 1)
+        (hrank : ∀ (i : Fin N), Matrix.rank (A i) ≤ r),
+        ↑(HigherRankKSRuntime.solve O A hr hA hs hrank).cost ≤ C * (1 + ↑N + ↑d) ^ e
+'HigherRankKSRuntime.solve_polynomial' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HigherRankKSRuntime.SDPValue.encoded_attainment' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HigherRankKSRuntime.RuntimeCubeArithmetic.massNorm_value' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HigherRankKSRuntime.GlobalEpochs.runArithmeticOn_cost_le_semantic' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HigherRankKSRuntime.RuntimeFuel.program_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HigherRankKSRuntime.RuntimeScalarRecipe.formula_executes' depends on axioms: [propext, Classical.choice, Quot.sound]

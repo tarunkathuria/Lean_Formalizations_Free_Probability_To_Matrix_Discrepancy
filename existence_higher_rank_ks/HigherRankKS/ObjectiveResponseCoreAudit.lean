@@ -1,0 +1,6 @@
+import HigherRankKS.ObjectiveResponseCore
+import HigherRankKS.BalancedSourceResponse
+#print axioms HigherRankKS.ObjectiveResponse.sourceAcceleration_eq_second
+#print axioms HigherRankKS.ObjectiveResponse.reducedCurve_second_acceleration
+#print axioms HigherRankKS.BalancedSourceResponse.mismatch_eq
+#print axioms HigherRankKS.LinearDerivative.second

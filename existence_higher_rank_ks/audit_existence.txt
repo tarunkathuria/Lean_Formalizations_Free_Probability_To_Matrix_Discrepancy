@@ -1,0 +1,29 @@
+'AugmentedHigherRankKS.exists_regularized_exhausted_epoch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AugmentedHigherRankKS.exists_exhausted_epoch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AugmentedHigherRankKS.exists_dyadic_signing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AugmentedHigherRankKS.subisotropic_existence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AugmentedHigherRankKS.existence' depends on axioms: [propext, Classical.choice, Quot.sound]
+def AugmentedHigherRankKS.SubisotropicExistenceStatement : Prop :=
+∀ (N d r : ℕ) (ε : ℝ),
+  1 ≤ r →
+    0 ≤ ε →
+      ∀ (A : Fin N → Matrix (Fin d) (Fin d) ℂ),
+        (∀ (i : Fin N), (A i).PosSemidef) →
+          ∑ i, A i ≤ 1 →
+            (∀ (i : Fin N), ‖Matrix.toEuclideanCLM (A i)‖ ≤ ε) →
+              (∀ (i : Fin N), (A i).rank ≤ r) →
+                ∃ σ,
+                  (∀ (i : Fin N), σ i = 1 ∨ σ i = -1) ∧
+                    ‖Matrix.toEuclideanCLM (HigherRankKS.signedSum A σ)‖ ≤ min 1 (10000 * √(ε * Real.log (2 * ↑r)))
+def AugmentedHigherRankKS.ExistenceStatement : Prop :=
+∀ (N d r : ℕ) (ε : ℝ),
+  1 ≤ r →
+    0 ≤ ε →
+      ∀ (A : Fin N → Matrix (Fin d) (Fin d) ℂ),
+        (∀ (i : Fin N), (A i).PosSemidef) →
+          ∑ i, A i = 1 →
+            (∀ (i : Fin N), ‖Matrix.toEuclideanCLM (A i)‖ ≤ ε) →
+              (∀ (i : Fin N), (A i).rank ≤ r) →
+                ∃ σ,
+                  (∀ (i : Fin N), σ i = 1 ∨ σ i = -1) ∧
+                    ‖Matrix.toEuclideanCLM (HigherRankKS.signedSum A σ)‖ ≤ min 1 (10000 * √(ε * Real.log (2 * ↑r)))

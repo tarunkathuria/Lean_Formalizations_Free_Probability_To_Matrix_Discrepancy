@@ -1,0 +1,12 @@
+import MatrixSpencer.KSFrobeniusTangent
+import MatrixSpencer.KSActualEnvelope
+import MatrixSpencer.KSDebitUniformFloor
+import MatrixSpencer.KSComplexRelativeSource
+import MatrixSpencer.KSAccretiveProductDomain
+import MatrixSpencer.KSComplexRootTraceBound
+import MatrixSpencer.KSCauchyDerivatives
+import MatrixSpencer.KSCauchyRealBridge
+import MatrixSpencer.KSTaylorBudget
+
+/-! Quantitative derivative components. The actual holomorphic objective extension
+and resulting uniform joint derivative certificate remain separate obligations. -/

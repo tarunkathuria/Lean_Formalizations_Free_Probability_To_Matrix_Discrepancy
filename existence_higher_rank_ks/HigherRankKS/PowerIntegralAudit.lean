@@ -1,0 +1,6 @@
+import HigherRankKS.PowerIntegralDerivatives
+#print axioms HigherRankKS.PowerIntegralRepresentation.exists_scalarRepresentation
+#print axioms HigherRankKS.PowerIntegralRepresentation.resolvent_representation
+#print axioms HigherRankKS.PowerIntegralDerivatives.hasDerivAt_power_integral
+#print axioms HigherRankKS.PowerIntegralDerivatives.iteratedDeriv_two_power_integral
+#print axioms HigherRankKS.PowerIntegralDerivatives.contDiffAt_power

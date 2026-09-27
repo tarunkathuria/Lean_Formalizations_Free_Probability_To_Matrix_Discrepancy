@@ -1,0 +1,3 @@
+import HigherRankKSRuntime.RuntimeGlobalWork
+#print axioms HigherRankKSRuntime.RuntimeGlobalWork.fullCost_le
+#print axioms HigherRankKSRuntime.RuntimeGlobalWork.uniform_polynomial

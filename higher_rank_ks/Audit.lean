@@ -1,0 +1,13 @@
+import HigherRankKSRuntime
+set_option pp.universes false
+#check HigherRankKSRuntime.algorithmic
+#print axioms HigherRankKSRuntime.algorithmic
+#check HigherRankKSRuntime.solve_correct
+#print axioms HigherRankKSRuntime.solve_correct
+#check HigherRankKSRuntime.solve_polynomial
+#print axioms HigherRankKSRuntime.solve_polynomial
+#print axioms HigherRankKSRuntime.SDPValue.encoded_attainment
+#print axioms HigherRankKSRuntime.RuntimeCubeArithmetic.massNorm_value
+#print axioms HigherRankKSRuntime.GlobalEpochs.runArithmeticOn_cost_le_semantic
+#print axioms HigherRankKSRuntime.RuntimeFuel.program_execution
+#print axioms HigherRankKSRuntime.RuntimeScalarRecipe.formula_executes

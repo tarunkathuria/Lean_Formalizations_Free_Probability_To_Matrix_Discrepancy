@@ -1,0 +1,11 @@
+import HigherRankKSRuntime.RuntimeGlobalArithmetic
+#print axioms HigherRankKSRuntime.RuntimeCubeArithmetic.mask_execution
+#print axioms HigherRankKSRuntime.RuntimeCubeArithmetic.mass_entry_execution
+#print axioms HigherRankKSRuntime.RuntimeCubeArithmetic.massNorm_value
+#print axioms HigherRankKSRuntime.RuntimeCubeArithmetic.massNorm_cost
+#print axioms HigherRankKSRuntime.RuntimeCubeArithmetic.round_execution
+#print axioms HigherRankKSRuntime.GlobalEpochs.runArithmeticOn_value
+#print axioms HigherRankKSRuntime.GlobalEpochs.runArithmeticOn_cost
+#print axioms HigherRankKSRuntime.GlobalEpochs.runArithmeticOn_cost_le_semantic
+set_option pp.proofs false in
+#check @HigherRankKSRuntime.GlobalEpochs.runArithmeticOn_cost

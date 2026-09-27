@@ -1,0 +1,23 @@
+name = "ks_faithful_20260915"
+version = "0.1.0"
+defaultTargets = ["FaithfulKS"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.24.0"
+
+[[lean_lib]]
+name = "MatrixSpencer"
+
+[[lean_lib]]
+name = "SeamlessKS"
+
+[[lean_lib]]
+name = "RadialKS"
+
+[[lean_lib]]
+name = "FaithfulKS"

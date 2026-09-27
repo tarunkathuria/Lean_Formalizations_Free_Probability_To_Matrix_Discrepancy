@@ -1,0 +1,4 @@
+import HigherRankKSRuntime.RuntimeWork
+#print axioms HigherRankKSRuntime.RuntimeWork.next_cost
+#print axioms HigherRankKSRuntime.RuntimeWork.preprocessing_cost
+#print axioms HigherRankKSRuntime.RuntimeWork.uniform_polynomial

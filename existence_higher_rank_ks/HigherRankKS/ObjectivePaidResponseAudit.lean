@@ -1,0 +1,7 @@
+import HigherRankKS.PointwisePaidResponse
+
+#print axioms HigherRankKS.ObjectiveResponse.fidelity_second_affine
+#print axioms HigherRankKS.ObjectiveResponse.objective_second_affine
+#print axioms HigherRankKS.ObjectiveResponse.chart_hessian_eq_affine_second
+#print axioms HigherRankKS.PointwiseResponse.objective_second_le
+#print axioms HigherRankKS.potential_second_eq_density_response

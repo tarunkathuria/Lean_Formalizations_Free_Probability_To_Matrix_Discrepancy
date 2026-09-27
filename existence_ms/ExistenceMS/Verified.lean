@@ -1,0 +1,10 @@
+import ExistenceMS.Main
+import ExistenceMS.Audit
+
+audit_ms_square_endpoint ExistenceMS.exists_square
+audit_ms_rectangular_endpoint ExistenceMS.exists_rectangular
+audit_ms_combined_endpoint ExistenceMS.exists_combined
+
+#print axioms ExistenceMS.exists_square
+#print axioms ExistenceMS.exists_rectangular
+#print axioms ExistenceMS.exists_combined

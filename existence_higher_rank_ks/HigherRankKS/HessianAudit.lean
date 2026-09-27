@@ -1,0 +1,7 @@
+import HigherRankKS.PotentialHessian
+import HigherRankKS.SourceResponse
+import HigherRankKS.SourceDerivatives
+#print axioms HigherRankKS.potential_second_eq_density_response
+#print axioms HigherRankKS.SourceResponse.nonlinear_fidelity_second_curve_energy
+#print axioms HigherRankKS.SourceDerivatives.source_first_affine_density
+#print axioms HigherRankKS.SourceDerivatives.source_second_affine_density

@@ -1,0 +1,17 @@
+import SimpleMS.RealSpectralCutoff
+import MatrixSpencer.OwnerShort
+import MatrixSpencer.CovarianceSampler
+#check Matrix.IsHermitian.mulVec_eigenvectorBasis
+#check dotProduct_smul
+#check dotProduct_smul_self
+#check EuclideanSpace.real_inner_eq
+#check real_inner_self_eq_norm_sq
+#check Matrix.toEuclideanCLM_apply
+#check Matrix.toEuclideanCLM
+#check Matrix.PosSemidef.conjTranspose_mul_mul_same
+#check Matrix.IsHermitian.star_mul_self_mul_eq_diagonal
+#check Matrix.posSemidef_diagonal_iff
+#check LinearMap.IsIdempotentElem.isProj_range
+#check LinearMap.isProj_range_iff
+#check Submodule.finrank_sup_add_finrank_inf_eq
+#check LinearMap.IsProj

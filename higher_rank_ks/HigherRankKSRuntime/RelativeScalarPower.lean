@@ -1,0 +1,1 @@
+import AugmentedHigherRankKS.RuntimeRegularity.RelativeScalarPower

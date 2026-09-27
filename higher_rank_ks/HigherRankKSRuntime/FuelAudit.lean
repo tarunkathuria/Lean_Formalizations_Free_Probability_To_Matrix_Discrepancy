@@ -1,0 +1,4 @@
+import HigherRankKSRuntime.RuntimeFuel
+#print axioms HigherRankKSRuntime.RuntimeFuel.compute_value
+#print axioms HigherRankKSRuntime.RuntimeFuel.program_execution
+#print axioms HigherRankKSRuntime.RuntimeFuel.total_with_fuel_polynomial

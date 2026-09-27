@@ -1,0 +1,8 @@
+import AugmentedHigherRankKS.FourBlockInputFloors
+#print axioms AugmentedHigherRankKS.densitySource_fderiv_posSemidef
+#print axioms AugmentedHigherRankKS.nonlinearSourceFidelity_fderiv
+#print axioms AugmentedHigherRankKS.maximizer_density_floor
+#print axioms AugmentedHigherRankKS.maximizer_transport_floor
+#print axioms AugmentedHigherRankKS.carrierMass_floor_of_norm
+#print axioms AugmentedHigherRankKS.transportMass_floor_of_norm
+#print axioms AugmentedHigherRankKS.maximizer_input_floors

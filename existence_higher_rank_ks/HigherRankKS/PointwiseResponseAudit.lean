@@ -1,0 +1,4 @@
+import HigherRankKS.PointwiseResponse
+#print axioms HigherRankKS.PointwiseResponse.responseEnergy_eq_frame
+#print axioms HigherRankKS.PointwiseResponse.paid_quadratic_le
+#print axioms HigherRankKS.PointwiseResponse.sourceAcceleration_split

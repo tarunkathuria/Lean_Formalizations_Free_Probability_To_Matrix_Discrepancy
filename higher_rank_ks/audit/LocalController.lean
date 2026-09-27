@@ -1,0 +1,13 @@
+import HigherRankKSRuntime.RuntimeNext
+import HigherRankKSRuntime.InvariantControllerLoop
+import HigherRankKSRuntime.RuntimeInvariant
+
+#print axioms HigherRankKSRuntime.RuntimeNext.solver_good
+#print axioms HigherRankKSRuntime.RuntimeNext.next_cost
+#print axioms HigherRankKSRuntime.RuntimeNext.next_largeOwners
+#print axioms HigherRankKSRuntime.ControllerLoop.run_terminal_on
+#print axioms HigherRankKSRuntime.ControllerLoop.run_work_le_on
+#print axioms HigherRankKSRuntime.ControllerLoop.run_potential_card_bound_on
+#print axioms HigherRankKSRuntime.ControllerLoop.run_preservesInactive_on
+#print axioms HigherRankKSRuntime.ControllerLoop.run_preservesFrozen_on
+#print HigherRankKSRuntime.RuntimeNext.solver_good

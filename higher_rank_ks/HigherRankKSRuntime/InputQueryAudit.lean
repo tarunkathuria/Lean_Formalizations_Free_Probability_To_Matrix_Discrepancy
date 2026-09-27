@@ -1,0 +1,13 @@
+import HigherRankKSRuntime.RuntimeInputNormalization
+import HigherRankKSRuntime.RuntimeStateReport
+import HigherRankKSRuntime.RuntimePreparationBounds
+
+#print axioms HigherRankKSRuntime.RuntimeInputNormalization.atomNorm_value
+#print axioms HigherRankKSRuntime.RuntimeInputNormalization.epsilon_cost
+#print axioms HigherRankKSRuntime.RuntimeInputNormalization.epsilon_lower
+#print axioms HigherRankKSRuntime.RuntimeInputNormalization.discard_center_bound
+#print axioms HigherRankKSRuntime.RuntimeInputNormalization.discard_reset_large
+#print axioms HigherRankKSRuntime.RuntimeStateReport.center_entry_execution
+#print axioms HigherRankKSRuntime.RuntimeStateReport.report_accuracy
+#print axioms HigherRankKSRuntime.RuntimeStateReport.report_cost
+#print axioms HigherRankKSRuntime.RuntimePreparationBounds.prep_line_bounds

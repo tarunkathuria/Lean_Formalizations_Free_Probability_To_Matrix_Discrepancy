@@ -1,0 +1,19 @@
+name = "higher_rank_ks_runtime_20260924"
+version = "0.1.0"
+defaultTargets = ["HigherRankKSRuntime"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.24.0"
+
+[[require]]
+name = "existence_higher_rank_ks"
+path = "../existence_higher_rank_ks"
+
+[[lean_lib]]
+name = "HigherRankKSRuntime"
+

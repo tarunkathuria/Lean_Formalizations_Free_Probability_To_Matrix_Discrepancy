@@ -1,0 +1,91 @@
+import MatrixSpencer.RectangularRidgePolynomialAlgorithm
+
+/-!
+# Polynomial execution of the instantiated rectangular algorithm
+
+There is no supplied walk, controller, response, derivative, step-size,
+success or runtime hypothesis. The only computational contract is the
+polynomial accurate affine-LMI solver. Every rejected retry, outer scan,
+nearest-sign completion and original-input scalar setup is charged.
+-/
+open Matrix
+open scoped BigOperators MatrixOrder ComplexOrder Matrix.Norms.L2Operator
+noncomputable section
+namespace MatrixSpencer.RectangularRidgePolynomialRuntime
+open RectangularRidgePolynomialAlgorithm
+open RectangularRidgePhaseProgress (epochCalls)
+open RectangularRidgeRetryParameters (retries selected)
+open MSCountedSampler (Implementation Bounded)
+variable {N d : ℕ} [Nonempty (Fin d)]
+local instance ridgePolynomialRuntimeCStar : CStarAlgebra (Matrix (Fin d) (Fin d) ℂ) := {}
+set_option maxRecDepth 8192
+set_option maxHeartbeats 1200000
+attribute [local irreducible] MSManuscriptAdaptive.run MSManuscriptBoundedProcess.run
+
+def epochBudget (S : RectangularRidgeConvexValue.PolynomialSolver) (N d k : ℕ) : ℕ :=
+  RectangularRidgeCountedAcceptedEpoch.operations S N d (retries N d k) + 10
+
+def budget (S : RectangularRidgeConvexValue.PolynomialSolver) (N d k : ℕ) : ℕ :=
+  selected N d * (epochBudget S N d k + 83 * N + 79) +
+    (8 * selected N d + 10 * d + N + 309)
+
+def randomDraws (N d k : ℕ) : ℕ :=
+  selected N d * RectangularRidgeCountedAcceptedEpoch.randomDraws N d (retries N d k)
+
+def implementation (S : RectangularRidgeConvexValue.PolynomialSolver) (a : Fin d)
+    (A : Fin N → Matrix (Fin d) (Fin d) ℂ) (hA : ∀ i, (A i).IsHermitian)
+    (hAn : ∀ i, ‖A i‖ ≤ 1) (hN : 1 ≤ N) (hND : N ≤ d) (k : ℕ) :
+    Implementation (output S.solver a A hA hAn hN hND k) :=
+  MSCountedSampler.overhead
+    (RectangularRidgeCountedFull.output (RectangularRidgeTuning.depth N d hN)
+      (RectangularRidgePrimitiveParameters.weight N d hN) (1 / (d : ℝ)) 0 A hA hAn
+      (RectangularRidgeEpochFactory.factory S.solver a A hA hAn hN hND (retries N d k))
+      (RectangularRidgeCountedEpochFactory.implementation S a A hA hAn hN hND (retries N d k))
+      (half_pos (RectangularRidgeUniformResponse.duration_positive hN hND))
+      (by norm_num) (by positivity) (epochCalls N d hN)
+      (RectangularRidgePhaseProgress.epochCalls_sufficient hN hND) (initial hN))
+    ((RectangularRidgePhaseSetup.setup N d).cost + RectangularRidgePhaseSetup.retryExpr.cost + N + 5)
+
+/-- The explicit budget is a fixed composition of dimension polynomials,
+the confidence integer and the permitted solver's polynomial cost bound. -/
+theorem implementation_bounded (S : RectangularRidgeConvexValue.PolynomialSolver) (a : Fin d)
+    (A : Fin N → Matrix (Fin d) (Fin d) ℂ) (hA : ∀ i, (A i).IsHermitian)
+    (hAn : ∀ i, ‖A i‖ ≤ 1) (hN : 1 ≤ N) (hND : N ≤ d) (k : ℕ) :
+    Bounded (implementation S a A hA hAn hN hND k) (budget S N d k) (randomDraws N d k) := by
+  have he := RectangularRidgeCountedFull.output_bounded (RectangularRidgeTuning.depth N d hN)
+    (RectangularRidgePrimitiveParameters.weight N d hN) (1 / (d : ℝ)) 0 A hA hAn
+    (RectangularRidgeEpochFactory.factory S.solver a A hA hAn hN hND (retries N d k))
+    (RectangularRidgeCountedEpochFactory.implementation S a A hA hAn hN hND (retries N d k))
+    (half_pos (RectangularRidgeUniformResponse.duration_positive hN hND))
+    (by norm_num) (by positivity) (epochCalls N d hN)
+    (RectangularRidgePhaseProgress.epochCalls_sufficient hN hND) (initial hN)
+    (RectangularRidgeCountedEpochFactory.implementation_bounded S a A hA hAn hN hND (retries N d k))
+  have hh := MSCountedSampler.overhead_bounded _
+    ((RectangularRidgePhaseSetup.setup N d).cost + RectangularRidgePhaseSetup.retryExpr.cost + N + 5) he
+  have hb := RectangularRidgeCountedFullBudget.operations_le hN hND (epochBudget S N d k)
+  have hr := RectangularRidgeCountedFullBudget.draws_le hN hND
+    (RectangularRidgeCountedAcceptedEpoch.randomDraws N d (retries N d k))
+  have hs := RectangularRidgePhaseSetup.setup_cost (D := d) hN
+  have ht := RectangularRidgePhaseSetup.retryExpr_cost
+  intro z out cost draws hx
+  have hp := hh z out cost draws hx
+  change cost ≤ budget S N d k ∧ draws ≤ randomDraws N d k
+  change cost ≤ RectangularRidgeCountedFull.operations N (epochCalls N d hN) (epochBudget S N d k) +
+    ((RectangularRidgePhaseSetup.setup N d).cost + RectangularRidgePhaseSetup.retryExpr.cost + N + 5) ∧
+      draws ≤ (N + 1) * (epochCalls N d hN * RectangularRidgeCountedAcceptedEpoch.randomDraws N d (retries N d k)) at hp
+  unfold budget randomDraws
+  constructor <;> omega
+
+/-- A counted execution exists on every prospective random input and obeys
+the same bound, independently of whether that input returns a signing. -/
+theorem execution_bounded (S : RectangularRidgeConvexValue.PolynomialSolver) (a : Fin d)
+    (A : Fin N → Matrix (Fin d) (Fin d) ℂ) (hA : ∀ i, (A i).IsHermitian)
+    (hAn : ∀ i, ‖A i‖ ≤ 1) (hN : 1 ≤ N) (hND : N ≤ d) (k : ℕ)
+    (z : (output S.solver a A hA hAn hN hND k).Draws) :
+    ∃ cost draws, (implementation S a A hA hAn hN hND k).Executes z
+      ((output S.solver a A hA hAn hN hND k).value z) cost draws ∧
+        cost ≤ budget S N d k ∧ draws ≤ randomDraws N d k :=
+  MSCountedSampler.execution_bounded (implementation S a A hA hAn hN hND k)
+    (implementation_bounded S a A hA hAn hN hND k) z
+
+end MatrixSpencer.RectangularRidgePolynomialRuntime

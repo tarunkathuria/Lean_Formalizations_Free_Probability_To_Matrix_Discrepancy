@@ -1,0 +1,128 @@
+import MatrixSpencer.MSManuscriptNumericalEpochShort
+import MatrixSpencer.MSManuscriptNumericalSamplerData
+import MatrixSpencer.CovarianceTraceLedger
+
+/-!
+# Actual short, LDL draw, and matched update for a square-MS movement
+
+The covariance, its positive-pivot list, weights, and directions are all finite
+scalar constructions. This module discharges the constrained-short operation;
+no shorting oracle, spectral sample, or favorable draw occurs in these data.
+It proves the exact real-arithmetic specialization, not rational grid rounding
+or a runtime/cost theorem for sampling arbitrary real weights.
+-/
+open Matrix
+open scoped BigOperators MatrixOrder
+noncomputable section
+namespace MatrixSpencer.MSManuscriptNumericalMovement
+open MSManuscriptNumericalEpochShort
+variable {d : ℕ}
+
+def covariance (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) := epoch C F x
+abbrev Draws (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) :=
+  MSManuscriptNumericalSamplerData.Draws (covariance C F x)
+def weight (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) :=
+  MSManuscriptNumericalSamplerData.weight (covariance C F x)
+def increment (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) :=
+  MSManuscriptNumericalSamplerData.increment (covariance C F x)
+def nextPoint (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d))
+    (h : ℝ) (s : Draws C F x) := x+h • increment C F x s
+def nextOwner (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) (h : ℝ) :=
+  C-h^2 • covariance C F x
+
+def sample (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (hq : 0<realTrace (covariance C F x)) :
+    MSManuscriptAdaptive.Sampler (EuclideanSpace ℝ (Fin d)) :=
+  MSManuscriptNumericalSamplerData.sample (covariance C F x) (epoch_posSemidef C hC F x) hq
+
+theorem weight_positive (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (hq : 0<realTrace (covariance C F x)) (s : Draws C F x) :
+    0<weight C F x s := MSManuscriptNumericalSamplerData.weight_pos _ hq s
+
+theorem weights_sum (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (hq : 0<realTrace (covariance C F x)) :
+    (∑s : Draws C F x,weight C F x s)=1 :=
+  MSManuscriptNumericalSamplerData.weight_sum _ (epoch_posSemidef C hC F x) hq
+
+theorem mean_zero (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) :
+    (∑s : Draws C F x,weight C F x s • increment C F x s)=0 :=
+  MSManuscriptNumericalSamplerData.mean_zero _
+
+theorem covariance_exact (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (hq : 0<realTrace (covariance C F x)) :
+    (∑s : Draws C F x,weight C F x s • realRankOne (WithLp.ofLp (increment C F x s)))=covariance C F x :=
+  MSManuscriptNumericalSamplerData.covariance _ (epoch_posSemidef C hC F x) hq
+
+theorem increment_constraints (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (s : Draws C F x) :
+    (∀i∈F,increment C F x s i=0) ∧ inner ℝ x (increment C F x s)=0 := by
+  simp only [increment,MSManuscriptNumericalSamplerData.increment_eq]
+  refine ⟨?_,?_⟩
+  · intro i hi
+    exact MSManuscriptNumericalSamplerMovement.frozen_increment _ (epoch_posSemidef C hC F x) i
+      (epoch_frozen C hC F x i hi) _
+  · exact MSManuscriptNumericalSamplerMovement.orthogonal_of_annihilator _ (epoch_posSemidef C hC F x) x
+      (epoch_radial C hC F x) _
+
+theorem increment_norm_sq (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (s : Draws C F x) :
+    ‖increment C F x s‖^2=realTrace (covariance C F x) :=
+  MSManuscriptNumericalSamplerData.increment_norm_sq _ (epoch_posSemidef C hC F x) s
+
+theorem norm_gain (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (h : ℝ) (s : Draws C F x) :
+    ‖nextPoint C F x h s‖^2=‖x‖^2+h^2*realTrace (covariance C F x) := by
+  rw [nextPoint,norm_add_sq_real,real_inner_smul_right,(increment_constraints C hC F x s).2,
+    mul_zero,mul_zero,add_zero,norm_smul,mul_pow,Real.norm_eq_abs,sq_abs,increment_norm_sq C hC F x s]
+
+theorem frozen_preserved (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (h : ℝ) (s : Draws C F x) (i : Fin d) (hi : i∈F) :
+    nextPoint C F x h s i=x i := by
+  change x i+h*increment C F x s i=x i
+  rw [(increment_constraints C hC F x s).1 i hi,mul_zero,add_zero]
+
+theorem nextOwner_valid (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) {h : ℝ} (hh : h^2<1) :
+    (nextOwner C F x h).PosSemidef ∧ nextOwner C F x h≤C ∧
+      LinearMap.range (Matrix.toEuclideanCLM (𝕜 := ℝ) (nextOwner C F x h)).toLinearMap=
+        LinearMap.range (Matrix.toEuclideanCLM (𝕜 := ℝ) C).toLinearMap :=
+  covarianceMovement_posSemidef_range hC (epoch_posSemidef C hC F x) (epoch_le C hC F x) hh
+
+theorem nextOwner_trace (C : Matrix (Fin d) (Fin d) ℝ) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (h : ℝ) :
+    realTrace (nextOwner C F x h)=realTrace C-h^2*realTrace (covariance C F x) := by simp [nextOwner]
+
+theorem nextOwner_matched (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (hq : 0<realTrace (covariance C F x)) (h : ℝ) :
+    nextOwner C F x h=C-h^2 • (∑s : Draws C F x,weight C F x s • realRankOne (WithLp.ofLp (increment C F x s))) := by
+  rw [covariance_exact C hC F x hq]
+  rfl
+
+theorem trace_positive_of_ledger (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (hC1 : C≤1)
+    (F : Finset (Fin d)) (x : EuclideanSpace ℝ (Fin d)) {dc : ℝ} (hd : 32≤d)
+    (htrace : (d:ℝ)/8-dc≤realTrace C) (hdc : dc≤(d:ℝ)/64) (hF : (F.card:ℝ)≤(d:ℝ)/64) :
+    (d:ℝ)/16≤realTrace (covariance C F x) ∧ 0<realTrace (covariance C F x) := by
+  apply movement_trace_positive_of_ledger (by exact_mod_cast hd) hdc hF
+  have h := epoch_trace_lower C hC hC1 F x
+  change realTrace C-(F.card:ℝ)-1≤realTrace (covariance C F x) at h
+  linarith
+
+theorem nextPoint_mem_cube (C : Matrix (Fin d) (Fin d) ℝ) (hC : C.PosSemidef) (F : Finset (Fin d))
+    (x : EuclideanSpace ℝ (Fin d)) (hx : ∀i,|x i|≤1) {ρ h : ℝ}
+    (hmargin : ∀i,i∉F→|x i|≤1-ρ) (hstep : |h| *Real.sqrt (realTrace (covariance C F x))≤ρ)
+    (s : Draws C F x) : ∀i,|nextPoint C F x h s i|≤1 := by
+  intro i
+  by_cases hi : i∈F
+  · rw [frozen_preserved C hC F x h s i hi]
+    exact hx i
+  have hn : ‖increment C F x s‖=Real.sqrt (realTrace (covariance C F x)) := by
+    rw [←increment_norm_sq C hC F x s,Real.sqrt_sq (norm_nonneg _)]
+  have hc : |increment C F x s i|≤Real.sqrt (realTrace (covariance C F x)) := by
+    simpa only [Real.norm_eq_abs,hn] using PiLp.norm_apply_le (increment C F x s) i
+  have hs := mul_le_mul_of_nonneg_left hc (abs_nonneg h)
+  have ht := abs_add_le (x i) (h*increment C F x s i)
+  rw [abs_mul] at ht
+  change |x i+h*increment C F x s i|≤1
+  linarith [hmargin i hi]
+
+end MatrixSpencer.MSManuscriptNumericalMovement

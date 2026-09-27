@@ -1,0 +1,6 @@
+import AugmentedHigherRankKS.FourBlockLocalCurvature
+
+#print axioms AugmentedHigherRankKS.Frames.exists_negative_curvature
+#print axioms AugmentedHigherRankKS.Frames.debit_pos
+#print axioms AugmentedHigherRankKS.potential_second_eq_density_response
+#print axioms AugmentedHigherRankKS.SupportedSourceMetric.actual_full_absorption

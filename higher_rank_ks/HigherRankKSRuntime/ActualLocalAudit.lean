@@ -1,0 +1,12 @@
+import HigherRankKSRuntime.RuntimeStateBounds
+
+/-! Kernel dependency audit of the actual local runtime bridge. -/
+#print axioms HigherRankKSRuntime.ActiveEnumeration.Execution.extension_execution
+#print axioms HigherRankKSRuntime.ActiveEnumeration.Execution.extension_cost
+#print axioms HigherRankKSRuntime.ActiveEnumeration.runtime_chart_eq
+#print axioms HigherRankKSRuntime.ActiveEnumeration.runtime_scaled_chart_eq
+#print axioms HigherRankKSRuntime.RuntimeCurvature.rejected_preparation_cap
+#print axioms HigherRankKSRuntime.RuntimeCurvature.runtime_negative_tangent_witness
+#print axioms HigherRankKSRuntime.RuntimeStateBounds.state_quadratic_query_domain
+#print axioms HigherRankKSRuntime.RuntimeStateBounds.state_preparation_query_domain
+#print axioms HigherRankKSRuntime.RuntimeStateBounds.state_negative_tangent_witness
